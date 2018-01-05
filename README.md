@@ -61,21 +61,21 @@ Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이
     ![008](./images/008.PNG)
 
 ### Part 2. 실습에 필요한 리소스 생성 및 BlobTrigger 기능을 하는 Azure Functions 만들기
-1. 대쉬보드에서 **리소스 그룹**을 선택하시고, 위에서 진행했던 것과 같이 **FunctionLabRG** 리소스 그룹을 선택하여 접속합니다. 
+1. 대쉬보드에서 **리소스 그룹**을 선택하시고, 위에서 진행했던 것과 같이 **FunctionLabRG** 리소스 그룹을 선택하여 접속한다. 
     ![003](./images/003.PNG)
 
 2. **추가** 버튼을 클릭한 후, 검색창에 **app service plan**으로 검색하여 **App Service 계획**을 찾고 선택한 후 **만들기** 버튼을 누른다.
 
-    ![009](./images/009.PNG)
+    ![009](./images/009.PNG)    
     ![010](./images/010.PNG)
 
-3. 다음과 같이 선택한 후 **만들기** 버튼을 눌러서 App Service 계획을 생성한다. 
+3. 다음과 같이 입력한 후 **만들기** 버튼을 눌러서 App Service 계획을 생성한다. 
 
     ![011](./images/011.PNG)
 
 4. 리소스 그룹으로 돌아와서 앞에서 생성핬던 **eunji-func-0106**를 다시 선택한다. 
 
-    ![012](./images/012.PNG)
+    ![012](./images/012.png)
 
 5. **함수** -> **새 함수** 버튼을 차례로 선택한다. 
 
@@ -88,23 +88,29 @@ Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이
 7. 다음과 같이 값을 변경하고 **만들기** 버튼을 눌러서 새 함수를 추가한다. 
     * 이름: **BlobImageAnalysis**
     * Path: **uploaded/{name}**
-   ![015](./images/015.PNG)
+
+        ![015](./images/015.PNG)
 
 8. 왼쪽 메뉴에서 **Azure Functions 이름(eunji-func-0106)** 선택 후, **개요** 탭 아래의 구성된 기능 중 **응용 프로그램 설정**을 클릭한다. 
+
    ![016](./images/016.PNG)
 
 9. **응용 프로그램 설정** 부분에서 **AzureWebJobsDashboard** 값을 확인한다. 
+
    ![017](./images/017.PNG)
 
 10. Azure Functions와 관련된 기본 코드 및 설정은 완료되었고 Storage와 관련된 작업이 남았다. **Azure Storage Explorer**를 실행하고 Azure 아이디를 이용하여 로그인을 진행한다. 
 
 11. Storage Accounts 목록에서 위에서 생성했던 스토리지(ex.eunjifunc0106)을 선택한 후 **Blob Container**를 확장한다음 마우스 오른쪽 버튼을 클릭하여 **uploaded**란 이름의 컨테이너를 생성한다. 
+
    ![018](./images/018.PNG)
 
-12. uploaded 컨테이너에 가지고 있는 이미지 파일을 업로드 해본다.  
+12. uploaded 컨테이너에 가지고 있는 이미지 파일을 업로드 해본다. 
+
    ![019](./images/019.PNG)
 
 13. 생성했던 BlobImageAnalysis 함수의 로그창에서 이미지 업로드시, Function이 수행되어 로그값이 찍히는 것을 확인할 수 있다. 
+
    ![020](./images/020.PNG)
 
 
