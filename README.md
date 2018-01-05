@@ -28,30 +28,39 @@ Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이
 ## 실습 과정
 ### Part 1. Azure Portal에서 Azure Functions 만들기
 1. [Azure Portal](https://portal.azure.com)에 접속한 후 로그인 합니다. 
+
 2. **+ 새로만들기** -> **계산(Compute)** -> **기능 앱(Function App)**을 차례로 클릭합니다.
  ![001](./images/001.PNG)
+
 3. 다음과 같이 값을 입력하신 후 **만들기** 버튼을 눌러서 Function을 생성하시기 바랍니다. 
     * 앱 이름: **이니셜-func-날짜(ex. eunji-func-0106)** 
     * 리소스 그룹: 새로만들기 -> **FunctionLabRG**
     * 호스팅 계획: **사용 계획**
     * 위치: **동아시아**
     * 저장소: 새로만들기 -> **이니셜func날짜(ex. eunjifunc0106)**
-  ![002](./images/002.PNG)
+    
+        ![002](./images/002.PNG)
+
 4. 대쉬보드로 돌아와서 좌측 메뉴중에 **리소스 그룹**을 선택하시고, 방금 생성했던 **FunctionLabRG** 리소스 그룹을 선택하여 접속합니다. 
- ![003](./images/003.PNG)
+    ![003](./images/003.PNG)
+
 5. 생성된 Azure Functions를 확인하고 선택하여 접속합니다.
- ![004](./images/004.PNG)
+    ![004](./images/004.PNG)
+
 6. 함수 앱 목록에서 함수 옆 **+** 버튼을 클릭하여 새로운 함수를 생성합니다. 
- ![005](./images/005.png)
+
+    ![005](./images/005.png)
+
 7. **Webhook + API** -> **JavaScript** -> **이 함수 만들기**를 차례로 클릭하여 첫 번재 Azure Functions를 생성합니다. 
- ![006](./images/006.png)
+
+    ![006](./images/006.PNG)
+
 8. 함수 생성이 완료되었습니다. 방금 만든 함수는 HTTP POST 요청으로 값을 보내면 이에 대해 응답을 해주는 아주 간단한 함수입니다. 오른쪽 **테스트** 탭을 확장한 후 아래 부분의 **실행** 버튼을 눌러서 테스트 해보실 수 있습니다. 
- ![007](./images/007.png)
- ![008](./images/008.PNG)
+
+    ![007](./images/007.PNG)
+    ![008](./images/008.PNG)
 
  
-
-
 node package 추가하기
 
 1. Kudu 접속
