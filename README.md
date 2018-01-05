@@ -117,19 +117,20 @@ Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이
 Reference Link: [https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
 
 1. 터미널을 열고 다음의 명령어를 통해 .NET Core에서 동작하는 Azure Functios runtime 2.x 툴을 설치한다. 
-[Windows]
 ```
+[Windows]
 npm install -g azure-functions-core-tools@core
 ```
 
-[Mac]
 ```
+[Mac]
 sudo npm install -g azure-functions-core-tools@core --unsafe-perm true
 ```
 
 2. 원하는 디렉토리로 이동한 후 **func init functionslab** 명령어를 입력하여 로컬 Functions 프로젝트를 생성한다. 그리고나서 생성된 하위 디렉토리로 이동한다. 
-[Windows, Mac 동일]
+
 ```
+[Windows, Mac 동일]
 func init functionslab
 cd functionslab
 ```
