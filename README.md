@@ -128,7 +128,6 @@ sudo npm install -g azure-functions-core-tools@core --unsafe-perm true
 ```
 
 2. 원하는 디렉토리로 이동한 후 **func init functionslab** 명령어를 입력하여 로컬 Functions 프로젝트를 생성한다. 그리고나서 생성된 하위 디렉토리로 이동한다. 
-
 ```
 [Windows, Mac 동일]
 func init functionslab
@@ -137,15 +136,15 @@ cd functionslab
    ![022](./images/022.PNG)
 
 3. **Part 2 - 6**에서 했던 것 처럼 **func new** 명령어를 이용하여 Functions 프로젝트에 새 함수를 추가하고, 템플릿 선택시 **JavaScript** -> **BlobTrigger**를 차례로 선택한다. 함수 이름은 기본값인 BlobTriggerJS 그대로 둔다.  
-[Windows, Mac 동일]
 ```
+[Windows, Mac 동일]
 func new
 ```
    ![023](./images/023.PNG)
 
 4. **func host start**를 입력하여 Azure Functions를 일단 실행해본다. 다음과 같은 에러를 만날 수 있을 것이다. 이는 AzureWebJobStorage의 값이 입력되지 않아서 발생한다. 
-[Windows, Mac 동일]
 ```
+[Windows, Mac 동일]
 func host start
 ```
    ![024](./images/024.PNG)
@@ -162,8 +161,8 @@ func host start
    ![027](./images/027.PNG)
 
 8. 터미널에서 **func host start** 명령어를 입력하여 Azure Functions를 다시 실행해본다. Azure Functions이 문제없이 동작하는지 확인한다. 
-[Windows, Mac 동일]
 ```
+[Windows, Mac 동일]
 func host start
 ```
    ![028](./images/028.PNG)
