@@ -75,7 +75,7 @@ Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이
 
 4. 리소스 그룹으로 돌아와서 앞에서 생성핬던 **eunji-func-0106**를 다시 선택한다. 
 
-    ![012](./images/012.png)
+    ![012](./images/012.PNG)
 
 5. **함수** -> **새 함수** 버튼을 차례로 선택한다. 
 
@@ -112,6 +112,75 @@ Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이
 13. 생성했던 BlobImageAnalysis 함수의 로그창에서 이미지 업로드시, Function이 수행되어 로그값이 찍히는 것을 확인할 수 있다. 
 
    ![020](./images/020.PNG)
+
+### Part 3. Local에서 Azure Functions 만들고 디버깅 해보기
+Reference Link: [https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+
+1. 터미널을 열고 다음의 명령어를 통해 .NET Core에서 동작하는 Azure Functios runtime 2.x 툴을 설치한다. 
+[Windows]
+```
+npm install -g azure-functions-core-tools@core
+```
+
+[Mac]
+```
+sudo npm install -g azure-functions-core-tools@core --unsafe-perm true
+```
+
+2. 원하는 디렉토리로 이동한 후 **func init functionslab** 명령어를 입력하여 로컬 Functions 프로젝트를 생성한다. 그리고나서 생성된 하위 디렉토리로 이동한다. 
+[Windows, Mac 동일]
+```
+func init functionslab
+cd functionslab
+```
+   ![022](./images/022.PNG)
+
+3. **Part 2 - 6**에서 했던 것 처럼 **func new** 명령어를 이용하여 Functions 프로젝트에 새 함수를 추가하고, 템플릿 선택시 **JavaScript** -> **BlobTrigger**를 차례로 선택한다. 함수 이름은 기본값인 BlobTriggerJS 그대로 둔다.  
+[Windows, Mac 동일]
+```
+func new
+```
+   ![023](./images/023.PNG)
+
+4. **func host start**를 입력하여 Azure Functions를 일단 실행해본다. 다음과 같은 에러를 만날 수 있을 것이다. 이는 AzureWebJobStorage의 값이 입력되지 않아서 발생한다. 
+[Windows, Mac 동일]
+```
+func host start
+```
+   ![024](./images/024.PNG)
+
+5. Visual Studio Code를 실행하고 functionslab 디렉토리 위치로 이동한다. 
+
+6. 탐색기 탭에서 **local.settings.json**을 오픈한 후, **AzureWebJobStorage** 값이 비어있는 것을 확인한다. 
+
+   ![025](./images/025.PNG)
+
+7. **Part 2 - 9**에서 확인했던 값을 복사하여 비어있는 곳에 붙여넣는다.
+
+   ![026](./images/026.PNG)
+   ![027](./images/027.PNG)
+
+8. 터미널에서 **func host start** 명령어를 입력하여 Azure Functions를 다시 실행해본다. Azure Functions이 문제없이 동작하는지 확인한다. 
+[Windows, Mac 동일]
+```
+func host start
+```
+   ![028](./images/028.PNG)
+
+9. **Part 2**에서 만든 함수와 동일하게 동작하도록 하기 위해 몇 가지 값을 바꾸어 주어야한다. Visual Studio Code에서 **function.json** 파일을 열고 **path**와 **connection**에 다음의 값을 입력한다. 
+* path: **"uploaded/{name}"**
+* connection: **"AzureWebJobsStorage"**
+
+   ![030](./images/030.PNG)
+
+10. Azure에서 동일한 기능을 하는 함수가 똑같이 실행되고 있으므로 테스트를 위해서 그 함수를 중지해야 한다. 다시 Azure Portal로 돌아가서 **함수**탭을 클릭하고 **BlobImageAnalysis**함수의 상태를 **사용안함**으로 변경한다. 
+
+   ![029](./images/029.PNG)
+
+11. Azure Storage Explorer의 uploaded 컨테이너에 다른 이미지를 업로드하여 로컬에서 만든 함수가 잘 작동하는지 확인한다. 
+
+   ![031](./images/031.PNG)
+   ![032](./images/032.PNG)
 
 
 1. Kudu 접속
