@@ -182,6 +182,104 @@ func host start
    ![031](./images/031.PNG)
    ![032](./images/032.PNG)
 
+### Part 4. Cognitive Service를 이용하여 업로드한 이미지 분석기능 추가하기
+지금까지는 Blob Storage에 이미지 파일이 업로드 되면 동작하는 Azure Functions를 Azure Portal과 Local에서 각각 만들어 보았다. 이제 [Cognitive Serivce의 Computer Vision 서비스](https://docs.microsoft.com/ko-kr/azure/cognitive-services/computer-vision/home)를 이용하여 이미지 분석기능을 추가해 보도록 하겠다. 
+
+1. Azure Portal의 홈 화면으로 이동한 후 **새로만들기** -> **AI + CognitiveServices** -> **Computuer Vision API**를 차례대로 클릭한다. 
+
+   ![033](./images/033.PNG)
+
+2. 다음과 같이 값을 입력한 후 **만들기** 버튼을 클릭하여 **Computer Vision API** 서비스를 생성한다. 
+    * Name: **VisionAPI**
+    * 구독: **(기본으로 선택된 값으로)**
+    * 위치: **동아시아**
+    * 가격 책정 계층: **F0**
+    * Resouce group: **기존 그룹 사용 -> FunctionLabRG**
+    * **체크박스 표시**
+
+3. FunctionLabRG 리소스 그룹 목록에 **VisionAPI**가 추가된 것을 확인할 수 있다. 
+
+   ![034](./images/034.PNG)
+
+4. Visual Studio Code로 이동한다. BlobTriggerJS 하위의 **index.js** 파일을 오픈한 후 기존의 코드를 전부 삭제하고, 다음의 코드로 대체한다. 
+```
+var request = require('request-promise');
+var azure  =  require('azure-storage');
+
+module.exports = function (context, myBlob) {
+
+context.log("Analyzing uploaded image '" + context.bindingData.name + "' for adult content...");
+var options = getAnalysisOptions(myBlob, process.env.SubscriptionKey, process.env.VisionEndpoint);
+analyzeAndProcessImage(context, options);
+
+function getAnalysisOptions(image, subscriptionKey, endpoint) {
+    return  {
+        uri: endpoint + "/analyze?visualFeatures=Adult",
+        method: 'POST',
+        body: image,
+        headers: {
+            'Content-Type': 'application/octet-stream',
+            'Ocp-Apim-Subscription-Key': subscriptionKey
+        }
+    }
+};
+
+function analyzeAndProcessImage(context, options) {
+    request(options)
+    .then((response) => {
+
+        response = JSON.parse(response);
+
+        context.log("Is Adult: ", response.adult.isAdultContent);
+        context.log("Adult Score: ", response.adult.adultScore);
+        context.log("Is Racy: " + response.adult.isRacyContent);
+        context.log("Racy Score: " + response.adult.racyScore);
+
+    })
+    .catch((error) => context.log(error))
+    .finally(() => context.done());
+};
+
+};
+```
+이미지가 업로드 되면 Computer Vision API를 입력하여 사진과 관련된 정보를 출력하는 기능을 한다. 
+
+6. 입력한 코드를 실행하기 위해 추가로 입력해주어야 하는 값이 있다. **function.json**을 열고 **"dataType": "binary",**값을 다음과 같이 추가한다. 
+
+   ![037](./images/037.PNG)
+
+7. **local.settings.json** 파일을 열고 Values에 **SubscriptionKey, VisionEndpoint**를 다음과 같이 추가한다. SubscrptionKey 값은 Azure Portal에서 FunctionsLabRG 리소스 그룹의 VisionAPI에서 확인할 수 있다. 
+
+    * "SubscriptionKey": <VisionAPI - Keys에서 값 확인 가능>,
+    * "VisionEndpoint": "https://eastasia.api.cognitive.microsoft.com/vision/v1.0"
+
+    ![038](./images/038.PNG)
+    ![040](./images/040.PNG)
+    ![039](./images/039.PNG)
+
+8. 터미널에서 func host start 명령어를 통해 함수를 실행하고, Azure Storage Explorer에서 uploaded 컨테이너에 사진을 업로드하여 잘 동작하는지 확인한다. 
+
+    ![042](./images/042.PNG)
+    ![041](./images/041.PNG)
+
+9. 
+
+5. 터미널을 열고 functionslab 디렉토리에서 **npm init** 명령어를 입력한 후, 계속 엔터를 입력하여 package.json 파일을 생성한다.   
+```
+[Windows, Mac 동일]
+npm init
+```
+   ![035](./images/035.PNG)
+
+6. 다음의 두 명령을 이용하여 index.js 파일에서 사용하는 node 패키지를 다운로드 받는다.
+```
+[Windows, Mac 동일]
+npm install --save request-promise
+npm install --save azure-storage
+```
+   ![036](./images/036.PNG)
+
+
 
 1. Kudu 접속
 2. wwwroot/ 하위 디렉토리에서 **npm init**명령어 이용하여 **package.json** 생성
@@ -219,18 +317,3 @@ module.exports = function (context, myBlob) {
     };
 };
 ```
-
-## 2. Azure Functions 로컬에서 개발하기 
-
-참고링크: https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local
-
-(Windows)
-
-
-(Mac)
-Mac이나 Linux와 같이 Windows 운영체제가 아닌 컴퓨터에서도 Azure Function 개발이 가능하고, Azure Portal에서 경험하는 것과 동일하게 개발하실 수 있습니다. 이는 Azure Function 런타임은 오픈소스이며 공개되어있기 때문입니다. 
-Azure Function 런타임은 1.0 버전과 2.0 버전으로 나뉘는데, 1.0에서는 .NET Framework를 사용하기 때문에 크로스 플랫폼 지원이 불가하며 Mac / Linux는 .NET Core를 사용하기 때문에 이를 기반으로 윈도우가 아닌 다른 운영체제에서도 닷넷 응용 프로그램이 개발 가능한 것 입니다. 
-
-Mac에서 Azure Function 로컬 개발을 위해서는 1. .NET Core를 설치하셔야 하고(6MB) 2. Azure Functions CLI를 설치하여 개발 하실 수 있습니다. 
-
-
