@@ -1,5 +1,6 @@
 # Azure Functions
 ![functions](./images/functions.jpg)
+
 Azure Functions란 마이크로소프트에서 제공하는 서버리스 서비스 입니다. 서버리스 서비스라는 말을 요즘 많이 들어보셨을텐데요, 문자그대로 해석하면 서버가 없다? 당연히 서버는 존재하죠! 하지만 클라우드 서비스에서 이 또한 관리해주고 추상화하여 제공하기 때문에 이를 사용하는 사용자 입장에서는 정말 나의 코드조각만 신경쓰면 됩니다. 이를 잘 표현하기 위해 이름에 Function이란 단어가 포함되었네요! 
 
 유사한 다른 벤더사의 제품으로는 AWS Lambda를 들 수 있습니다. 서버리스 서비스가 주목을 받고 있는 이유는 이를 이용하여 개발시 여러가지 장점을 가저다 주기 때문인데요, 그 중 하나가 확장성입니다. 이벤트 기반으로 동작하는 서비스에 Azure Function이 적합해요. 또한 과금 정책도 매우 합리적이랍니다! 딱 내 Function이 수행되는 만큼만 돈을 지불하면 되거든요! 매우 합리적이죠?
@@ -168,7 +169,7 @@ func host start
    ![028](./images/028.PNG)
 
 9. **Part 2**에서 만든 함수와 동일하게 동작하도록 하기 위해 몇 가지 값을 바꾸어 주어야한다. Visual Studio Code에서 **function.json** 파일을 열고 **path**와 **connection**에 다음의 값을 입력한다. 
-* path: **"uploaded/{name}"**
+* path: **"uploaded/{name}.jpg"**
 * connection: **"AzureWebJobsStorage"**
 
    ![030](./images/030.PNG)
@@ -182,7 +183,7 @@ func host start
    ![031](./images/031.PNG)
    ![032](./images/032.PNG)
 
-### Part 4. Cognitive Service를 이용하여 업로드한 이미지 분석기능 추가하기
+### Part 4. Cognitive Service를 이용하여 업로드한 이미지를 분석하는 기능 추가하기
 지금까지는 Blob Storage에 이미지 파일이 업로드 되면 동작하는 Azure Functions를 Azure Portal과 Local에서 각각 만들어 보았다. 이제 [Cognitive Serivce의 Computer Vision 서비스](https://docs.microsoft.com/ko-kr/azure/cognitive-services/computer-vision/home)를 이용하여 이미지 분석기능을 추가해 보도록 하겠다. 
 
 1. Azure Portal의 홈 화면으로 이동한 후 **새로만들기** -> **AI + CognitiveServices** -> **Computuer Vision API**를 차례대로 클릭한다. 
@@ -244,25 +245,6 @@ function analyzeAndProcessImage(context, options) {
 ```
 이미지가 업로드 되면 Computer Vision API를 입력하여 사진과 관련된 정보를 출력하는 기능을 한다. 
 
-6. 입력한 코드를 실행하기 위해 추가로 입력해주어야 하는 값이 있다. **function.json**을 열고 **"dataType": "binary",**값을 다음과 같이 추가한다. 
-
-   ![037](./images/037.PNG)
-
-7. **local.settings.json** 파일을 열고 Values에 **SubscriptionKey, VisionEndpoint**를 다음과 같이 추가한다. SubscrptionKey 값은 Azure Portal에서 FunctionsLabRG 리소스 그룹의 VisionAPI에서 확인할 수 있다. 
-
-    * "SubscriptionKey": <VisionAPI - Keys에서 값 확인 가능>,
-    * "VisionEndpoint": "https://eastasia.api.cognitive.microsoft.com/vision/v1.0"
-
-    ![038](./images/038.PNG)
-    ![040](./images/040.PNG)
-    ![039](./images/039.PNG)
-
-8. 터미널에서 func host start 명령어를 통해 함수를 실행하고, Azure Storage Explorer에서 uploaded 컨테이너에 사진을 업로드하여 잘 동작하는지 확인한다. 
-
-    ![042](./images/042.PNG)
-    ![041](./images/041.PNG)
-
-9. 
 
 5. 터미널을 열고 functionslab 디렉토리에서 **npm init** 명령어를 입력한 후, 계속 엔터를 입력하여 package.json 파일을 생성한다.   
 ```
@@ -279,6 +261,142 @@ npm install --save azure-storage
 ```
    ![036](./images/036.PNG)
 
+
+7. 입력한 코드를 실행하기 위해 추가로 입력해주어야 하는 값이 있다. **function.json**을 열고 **"dataType": "binary",**값을 다음과 같이 추가한다. 
+
+   ![037](./images/037.PNG)
+
+8. **local.settings.json** 파일을 열고 Values에 **SubscriptionKey, VisionEndpoint**를 다음과 같이 추가한다. SubscrptionKey 값은 Azure Portal에서 FunctionsLabRG 리소스 그룹의 VisionAPI에서 확인할 수 있다. 
+
+    * "SubscriptionKey": <VisionAPI - Keys에서 값 확인 가능>,
+    * "VisionEndpoint": "https://eastasia.api.cognitive.microsoft.com/vision/v1.0"
+
+    ![038](./images/038.PNG)
+    ![040](./images/040.PNG)
+    ![039](./images/039.PNG)
+
+9. 터미널에서 func host start 명령어를 통해 함수를 실행하고, Azure Storage Explorer에서 uploaded 컨테이너에 사진을 업로드하여 잘 동작하는지 확인한다. 
+
+    ![042](./images/042.PNG)
+    ![041](./images/041.PNG)
+
+### Part 5. 부적절한 이미지를 Blob Storag의 별도의 컨테이너에 저장하는 기능 추가하기
+
+1. Visual Studio Code에서 **index.js** 파일을 열고 31번째 줄 즈음에 다음의 코드를 추가한다.
+
+```
+var fileName = context.bindingData.name
+var targetContainer = ((response.adult.isRacyContent) ? 'rejected' : 'accepted')
+var blobService = azure.createBlobService(process.env.AzureWebJobsStorage)
+
+blobService.startCopyBlob(getStoragePath('uploaded', fileName), targetContainer, fileName, function (error, s, r) {
+if (error) context.log(error)
+context.log(fileName + ' created in ' + targetContainer + '.')
+
+blobService.setBlobMetadata(targetContainer, fileName,
+    {
+    'isAdultContent': response.adult.isAdultContent,
+    'adultScore': (response.adult.adultScore * 100).toFixed(0) + '%',
+    'isRacyContent': response.adult.isRacyContent,
+    'racyScore': (response.adult.racyScore * 100).toFixed(0) + '%'
+    },
+
+    function (error, s, r) {
+        if (error) context.log(error)
+        context.log(fileName + ' metadata added successfully.')
+    })
+})
+```
+isRacyContent 값이 True이면 rejected 컨테이너에 그렇지 않은 경우는 accepted 컨테이너에 이미지가 저장된다. 이미지 저장시 관련 메타정보도 함께 저장한다. 
+
+2. **index.js** 파일을 열고 57번째 줄 즈음에 다음의 코드를 추가한다.
+```
+function getStoragePath (container, fileName) {
+    var storageConnection = (process.env.AzureWebJobsStorage).split(';')
+    var accountName = storageConnection[1].split('=')[1]
+    return 'https://' + accountName + '.blob.core.windows.net/' + container + '/' + fileName + '.jpg'
+};
+```
+저장해야 할 Storage의 경로를 알아내기 위한 함수이다. 
+
+최종 index.js 코드는 다음과 같다. 
+```
+var request = require('request-promise')
+var azure = require('azure-storage')
+
+module.exports = function (context, myBlob) {
+  context.log("Analyzing uploaded image '" + context.bindingData.name + "' for adult content...")
+  var options = getAnalysisOptions(myBlob, process.env.SubscriptionKey, process.env.VisionEndpoint)
+  analyzeAndProcessImage(context, options)
+
+  function getAnalysisOptions (image, subscriptionKey, endpoint) {
+    return {
+      uri: endpoint + '/analyze?visualFeatures=Adult',
+      method: 'POST',
+      body: image,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Ocp-Apim-Subscription-Key': subscriptionKey
+      }
+    }
+  };
+
+  function analyzeAndProcessImage (context, options) {
+    request(options)
+    .then((response) => {
+      response = JSON.parse(response)
+
+      context.log('Is Adult: ', response.adult.isAdultContent)
+      context.log('Adult Score: ', response.adult.adultScore)
+      context.log('Is Racy: ' + response.adult.isRacyContent)
+      context.log('Racy Score: ' + response.adult.racyScore)
+
+      var fileName = context.bindingData.name
+      var targetContainer = ((response.adult.isRacyContent) ? 'rejected' : 'accepted')
+      var blobService = azure.createBlobService(process.env.AzureWebJobsStorage)
+
+      blobService.startCopyBlob(getStoragePath('uploaded', fileName), targetContainer, fileName, function (error, s, r) {
+        if (error) context.log(error)
+        context.log(fileName + ' created in ' + targetContainer + '.')
+
+        blobService.setBlobMetadata(targetContainer, fileName,
+          {
+            'isAdultContent': response.adult.isAdultContent,
+            'adultScore': (response.adult.adultScore * 100).toFixed(0) + '%',
+            'isRacyContent': response.adult.isRacyContent,
+            'racyScore': (response.adult.racyScore * 100).toFixed(0) + '%'
+          },
+
+            function (error, s, r) {
+              if (error) context.log(error)
+              context.log(fileName + ' metadata added successfully.')
+            })
+      })
+    })
+    .catch((error) => context.log(error))
+    .finally(() => context.done())
+  };
+
+  function getStoragePath (container, fileName) {
+    var storageConnection = (process.env.AzureWebJobsStorage).split(';')
+    var accountName = storageConnection[1].split('=')[1]
+    return 'https://' + accountName + '.blob.core.windows.net/' + container + '/' + fileName + '.jpg'
+  };
+}
+```
+
+3. Azure Storage Explorer를 열고 uploaded 컨테이너가 포함된 동일한 Blob Container 아래에 **accepted, rejected** 두개의 컨테이너를 위에서 했던 방식과 동일하게 추가한다. 
+
+    ![043](./images/043.PNG)
+
+4. 터미널에서 **func host start** 명령어로 함수를 실행시킨 상태에서 **uploaded** 컨테이너에 **.jpg**확장자로 끝나는 이미지 사진을 업로드하면 함수가 수행되는 것을 확인할 수 있다. 
+
+    ![044](./images/044.PNG)
+    ![045](./images/045.PNG)
+    ![046](./images/046.PNG)
+    ![047](./images/047.PNG)
+
+### Part 6. Azure에 로컬에서 개발한 function 업로드하기 
 
 
 1. Kudu 접속
