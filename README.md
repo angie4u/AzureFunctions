@@ -398,40 +398,37 @@ module.exports = function (context, myBlob) {
 
 ### Part 6. Azure에 로컬에서 개발한 function 업로드하기 
 
+1. 이제 완성한 함수를 Azure에 배포하는 일만 남았다! 터미널을 열고 **func azure account list** 명령어를 입력하여 Part1 에서 생성한 Azure Functions이 위치한 구독과 동일한 구독이 지정되어 있는지 확인한다. (구독이 1개인 분들은 걱정할 필요 없다)
 
-1. Kudu 접속
-2. wwwroot/ 하위 디렉토리에서 **npm init**명령어 이용하여 **package.json** 생성
-3. **npm install --save request-promise** 명령어 입력하여 필요로하는 패키지 추가
-
-코드
 ```
-var request = require('request-promise');
-
-module.exports = function (context, myBlob) {
-    context.log("JavaScript blob trigger function processed blob \n Name:", context.bindingData.name, "\n Blob Size:", myBlob.length, "Bytes");
-    
-    var options = getAnalysisOptions(myBlob, <key>, <endpoint>);
-    analyzeAndProcessImage(context, options);
-    
-    function getAnalysisOptions(image, subscriptionKey, endpoint) {
-        return  {
-            uri: endpoint + "/analyze?visualFeatures=Description",
-            method: 'POST',
-            body: image,
-            headers: {
-                'Content-Type': 'application/octet-stream',
-                'Ocp-Apim-Subscription-Key': subscriptionKey
-            }
-        }        
-    };
-
-    function analyzeAndProcessImage(context, options) {
-        request(options)
-        .then((response) => {
-             context.log(response);            
-        })
-        .catch((error) => context.log(error))
-        .finally(() => context.done());
-    };
-};
+func azure account list
 ```
+    ![048](./images/048.PNG)
+
+2. **func azure functionapp publish <FunctionAppName>**을 입력하여 로컬에서 개발한 펑션을 Azure로 업로드한다. <FunctionAppName>은 **Part 1 - 3**에서 지정한 값으로 나의 경우는 eunji-func-0106이다. 
+```
+func azure functionapp publish <FunctionAppName>
+```
+
+    ![049](./images/049.PNG)
+
+3. Azure Portal에 접속하여 위에서 생성했던 Azure Functions 관리화면으로 접속한다. **BlobTriggerJS**라는 함수가 추가된 것을 확인할 수 있다. 
+
+    ![050](./images/050.PNG)
+
+4. 이상태에서 실행하면 에러가 발생한다. 필요한 node 패키지가 추가되지 않았기 때문이다. 좌측의 메뉴에서 **함수 이름**을 클릭하고 **플랫폼 기능** 탭을 클릭한 후, 하단의 **고급 도구** 메뉴를 클릭한다. 
+
+    ![051](./images/051.PNG)
+
+5. 새로 열린 창에서 **Debug console** -> **CMD** 를 선택한다.
+
+    ![052](./images/052.PNG)
+
+6. **home\site\wwwroot** 경로로 이동하여 다음의 두 명령어를 입력한다. 
+```
+npm install --save request-promise
+npm install --save azure-storage
+```
+    ![053](./images/053.PNG)
+    ![054](./images/054.PNG)
+
