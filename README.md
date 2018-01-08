@@ -429,6 +429,7 @@ func azure functionapp publish <FunctionAppName>
 npm install --save request-promise
 npm install --save azure-storage
 ```
+
     ![053](./images/053.PNG)
     ![054](./images/054.PNG)
 
