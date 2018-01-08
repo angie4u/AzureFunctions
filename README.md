@@ -403,14 +403,13 @@ module.exports = function (context, myBlob) {
 ```
 func azure account list
 ```
-    ![048](./images/048.PNG)
+![048](./images/048.PNG)
 
 2. **func azure functionapp publish <FunctionAppName>**을 입력하여 로컬에서 개발한 펑션을 Azure로 업로드한다. <FunctionAppName>은 **Part 1 - 3**에서 지정한 값으로 나의 경우는 eunji-func-0106이다. 
 ```
 func azure functionapp publish <FunctionAppName>
 ```
-
-    ![049](./images/049.PNG)
+![049](./images/049.PNG)
 
 3. Azure Portal에 접속하여 위에서 생성했던 Azure Functions 관리화면으로 접속한다. **BlobTriggerJS**라는 함수가 추가된 것을 확인할 수 있다. 
 
@@ -430,6 +429,21 @@ npm install --save request-promise
 npm install --save azure-storage
 ```
 
-    ![053](./images/053.PNG)
-    ![054](./images/054.PNG)
+![053](./images/053.PNG)
+![054](./images/054.PNG)
 
+7. Azure Functions을 관리할 수 있는 페이지에서  **함수이름 선택** -> **플랫폼 기능** -> **응용 프로그램 설정** 을 차례로 선택하여 환경변수를 관리할 수 있는 페이지로 접속한다.  
+
+    ![055](./images/055.PNG)
+
+8. **새 설정 추가** 버튼을 클릭하여 **Part 4 - 8** 부분에서 입력한 Vision API 키 값 및 Endpoint 값을 추가해 주어야한다. 이 부분을 추가로 작업해주어야 하는, 이유는 로컬에서 Azure Functions를 개발할 때 환경변수를 저장했던 **local.settings.json** 내의 값들이 Azure에 배포시 반영이 되지 않았기 때문이다. 
+
+    * "SubscriptionKey": **<VisionAPI - Keys에서 값 확인 가능>**
+    * "VisionEndpoint": **"https://eastasia.api.cognitive.microsoft.com/vision/v1.0"**
+     
+    ![056](./images/056.PNG)
+
+9. 위의 설정을 마무리 하고 **uploaded** 컨테이너에 **.jpg**확장자로 끝나는 이미지 사진을 업로드하면 함수가 수행되는 것을 확인할 수 있다. 
+
+    ![057](./images/057.PNG)
+    ![058](./images/058.PNG)
