@@ -16,6 +16,14 @@ Azure Functions를 사용하기 위해 별도로 Library나 Framework을 공부�
 
 Blob Storage에 사용자가 이미지를 업로드 하면 Azure Function을 이용하여 이미지 파일을 Cognitive Vision API를 이용하여 분석하고 부적절한 이미지가 업로드 되면 reject 컨테이너에 이미지를 별도로 저장한다. reject 컨테이너에 이미지가 업로드되면 Logic Apps를 활용하여 관리자에게 안내 메일을 전송한다. 
 
+* Part 1. Azure Portal에서 Azure Functions 만들기
+* Part 2. 실습에 필요한 리소스 생성 및 BlobTrigger 기능을 하는 Azure Functions 만들기
+* Part 3. Local에서 Azure Functions 만들고 디버깅 해보기
+* Part 4. Cognitive Service를 이용하여 업로드한 이미지를 분석하는 기능 추가하기
+* Part 5. 부적절한 이미지를 Blob Storag의 별도의 컨테이너에 저장하는 기능 추가하기
+* Part 6. Azure에 로컬에서 개발한 function 업로드하기 
+* Part 7. Logic App을 이용하여 관리자에게 알림메일 전송하기 
+
 ## 실습 준비 
 
 (Windows, Mac 공통)
@@ -447,3 +455,26 @@ npm install --save azure-storage
 
     ![057](./images/057.PNG)
     ![058](./images/058.PNG)
+
+### Part 7. Logic Apps를 이용하여 관리자에게 알림메일 전송하기 
+이번 단계에서는 Azure Functions와 함께 사용하면 궁합이 좋은 Logic Apps을 활용해보는 실습을 해보도록 하겠습니다. Logic Apps 란 코드를 단 한줄도 작성하지 않고도 비주얼 디자이너를 통해 자동화 프로세스를 구성하실 수 있습니다.  
+
+1. Azure Portal 에서 **새로만들기** -> **웹 + 모바일** -> **Logic App**을 차례로 선택한다.
+
+    ![059](./images/059.PNG)
+
+2. 다음의 값을 차례로 입력하여 Logic Apps를 생성한다. 
+
+* 이름 : **이니셜-logic-날짜(ex. eunji-logic-0106)**
+* 구독 : **<선택된 값 그대로 둔다>**
+* 리소스 그룹 : **기존 그룹 사용** -> **FunctionLabRG**
+
+    ![060](./images/060.PNG)
+
+3. 생성된 Logic Apps에 접속하면 다음과 같은 **논리 앱 디자이너** 페이지가 나온다. 페이지 중간에 위치한 **비어 있는 논리 앱**을 선택한다. 
+
+    ![061](./images/061.PNG)
+
+4. 검색 창에 **blob**을 입력한 후, 검색 결과 중 트리거 항목에 있는 **Azure Blob Storage 트리거**를 선택한다. 
+
+    ![062](./images/062.PNG)
