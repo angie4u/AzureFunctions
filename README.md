@@ -191,6 +191,8 @@ func host start
    ![031](./images/031.PNG)
    ![032](./images/032.PNG)
 
+12. 터미널에서  **func host start --debug vscode** 입력후, 디버그 모드로 실행시 Azure Functions 디버깅 가능.
+
 ### Part 4. Cognitive Service를 이용하여 업로드한 이미지를 분석하는 기능 추가하기
 지금까지는 Blob Storage에 이미지 파일이 업로드 되면 동작하는 Azure Functions를 Azure Portal과 Local에서 각각 만들어 보았다. 이제 [Cognitive Serivce의 Computer Vision 서비스](https://docs.microsoft.com/ko-kr/azure/cognitive-services/computer-vision/home)를 이용하여 이미지 분석기능을 추가해 보도록 하겠다. 
 
